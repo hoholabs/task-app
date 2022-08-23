@@ -7,26 +7,47 @@ class App extends Component {
     super(props);
     this.state = {
       taskArray:[],
+      task:{key:'',text:''}
     };
     this.submitNewTask = this.submitNewTask.bind(this);
+    this.inputChange = this.inputChange.bind(this);
+
   }
 
-  submitNewTask() {
-    let taskInput = document.getElementById('task-input');
+  inputChange = (e) => {
+    this.setState({
+      task: {
+        text:e.target.value,
+        key:new Date().getTime(), 
+      },
+    })
+  }
+
+  submitNewTask = (e) => {
+    e.preventDefault();
 
     this.setState(prevState => ({
-      taskArray: [...prevState.taskArray, {key:new Date().getTime(), taskTitle:taskInput.value }]
+      taskArray: [...prevState.taskArray, this.state.task],
+      task:{
+        text:'',
+        key:'',
+      }
+      
     }));
+
+    let taskInput = document.getElementById('task-input')
+    taskInput.value = '';
+
   }
 
   render () { 
     return (
       <div className="App">
 
-        <div className = "UserInput">
-          <input id = 'task-input' placeholder = 'New task'></input>
-          <button onClick={this.submitNewTask}>Add Task</button>
-        </div>
+        <form className = "UserInput">
+          <input id = 'task-input' onChange={this.inputChange} placeholder = 'New task'></input>
+          <button type= 'submit' onClick={this.submitNewTask}>Add Task</button>
+        </form>
 
         <Overview taskArray = {this.state.taskArray}/>
 
